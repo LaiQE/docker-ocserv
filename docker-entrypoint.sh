@@ -54,13 +54,12 @@ if [ ! -f /etc/ocserv/certs/server-key.pem ] || [ ! -f /etc/ocserv/certs/server-
 
 	# Create Certificate_hash
 	OC_CERT="/etc/ocserv/certs/server-cert.pem"
-	OC_HCERT="$(echo pin-sha256:\
-	$(openssl x509 -in ${OC_CERT} -pubkey -noout \
+	OC_HCERT="$(echo pin-sha256:$(openssl x509 -in ${OC_CERT} -pubkey -noout \
 	| openssl pkey -pubin -outform der \
 	| openssl dgst -sha256 -binary \
 	| openssl enc -base64))"
 	echo ${OC_HCERT} > /etc/ocserv/Certificate_hash.txt
-	
+
 	# Create a test user
 	if [ -z "$NO_TEST_USER" ] && [ ! -f /etc/ocserv/ocpasswd ]; then
 		echo "Create test user 'test' with password 'test'"
