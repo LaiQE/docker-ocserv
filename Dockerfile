@@ -67,11 +67,23 @@ RUN set -x \
 	&& rm -fr /tmp/cn-no-route.txt \
 	&& rm -fr /tmp/groupinfo.txt
 
+# 生成openwrt要的Certificate hash
+RUN set -x \
+	&& apk add openssl \
+	&& OC_CERT="/etc/ocserv/certs/server-cert.pem" \
+	&& OC_HCERT="$(echo pin-sha256:\
+	$(openssl x509 -in ${OC_CERT} -pubkey -noout \
+	| openssl pkey -pubin -outform der \
+	| openssl dgst -sha256 -binary \
+	| openssl enc -base64))" \
+	&& echo ${OC_HCERT} > /etc/ocserv/Certificate_hash.txt \
+	&& apk del openssl
+
 WORKDIR /etc/ocserv
 
 COPY All /etc/ocserv/config-per-group/All
 COPY cn-no-route.txt /etc/ocserv/config-per-group/Route
-# 新加的内网配置
+# 新加的ZJU内网配置
 COPY ZJU /etc/ocserv/config-per-group/ZJU
 
 COPY docker-entrypoint.sh /entrypoint.sh
