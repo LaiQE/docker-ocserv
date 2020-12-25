@@ -1,4 +1,7 @@
-default-select-group = Route[仅海外代理 Exclude CN]
+default-select-group = ZJU[浙大内网 10开头]
 select-group = All[全局代理 All Proxy]
-auto-select-group = false
+select-group = Route[仅海外代理 Exclude CN]
+# 这里改成默认为浙大内网代理
+# auto-select-group = false
+auto-select-group = true
 config-per-group = /etc/ocserv/config-per-group

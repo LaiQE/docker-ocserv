@@ -51,11 +51,14 @@ RUN buildDeps=" \
 COPY groupinfo.txt /tmp/
 RUN set -x \
 	&& sed -i 's/\.\/sample\.passwd/\/etc\/ocserv\/ocpasswd/' /etc/ocserv/ocserv.conf \
-	&& sed -i 's/\(max-same-clients = \)2/\110/' /etc/ocserv/ocserv.conf \
+	# 这里还是默认的好
+	# && sed -i 's/\(max-same-clients = \)2/\110/' /etc/ocserv/ocserv.conf \
 	&& sed -i 's/\.\.\/tests/\/etc\/ocserv/' /etc/ocserv/ocserv.conf \
 	&& sed -i 's/#\(compression.*\)/\1/' /etc/ocserv/ocserv.conf \
 	&& sed -i '/^ipv4-network = /{s/192.168.1.0/192.168.99.0/}' /etc/ocserv/ocserv.conf \
-	&& sed -i 's/192.168.1.2/8.8.8.8/' /etc/ocserv/ocserv.conf \
+	# dns改成我的dns
+	&& sed -i 's/192.168.1.2/192.168.3.1/' /etc/ocserv/ocserv.conf \
+	# && sed -i 's/192.168.1.2/8.8.8.8/' /etc/ocserv/ocserv.conf \
 	&& sed -i 's/^route/#route/' /etc/ocserv/ocserv.conf \
 	&& sed -i 's/^no-route/#no-route/' /etc/ocserv/ocserv.conf \
 	&& sed -i '/\[vhost:www.example.com\]/,$d' /etc/ocserv/ocserv.conf \
@@ -68,6 +71,8 @@ WORKDIR /etc/ocserv
 
 COPY All /etc/ocserv/config-per-group/All
 COPY cn-no-route.txt /etc/ocserv/config-per-group/Route
+# 新加的内网配置
+COPY ZJU /etc/ocserv/config-per-group/ZJU
 
 COPY docker-entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
