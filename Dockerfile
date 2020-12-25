@@ -67,17 +67,10 @@ RUN set -x \
 	&& rm -fr /tmp/cn-no-route.txt \
 	&& rm -fr /tmp/groupinfo.txt
 
-# 生成openwrt要的Certificate hash
+# 安装openssl为生成openwrt要的Certificate hash做准备
 RUN set -x \
 	&& apk add openssl \
-	&& OC_CERT="/etc/ocserv/certs/server-cert.pem" \
-	&& OC_HCERT="$(echo pin-sha256:\
-	$(openssl x509 -in ${OC_CERT} -pubkey -noout \
-	| openssl pkey -pubin -outform der \
-	| openssl dgst -sha256 -binary \
-	| openssl enc -base64))" \
-	&& echo ${OC_HCERT} > /etc/ocserv/Certificate_hash.txt \
-	&& apk del openssl
+	&& rm -rf /var/cache/apk/*
 
 WORKDIR /etc/ocserv
 
